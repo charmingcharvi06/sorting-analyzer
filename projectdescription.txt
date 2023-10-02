@@ -1,0 +1,18 @@
+PROJECT TITTLE:-SORTING-ANAYZER
+Sorting in C++ is a concept in which the elements of an array are rearranged in a logical order. This order can be from lowest to highest or highest to lowest. Sorting an unsorted array helps to solve many problems such as searching for the minimum or maximum element, etc.
+
+Arranging things in a sorted manner makes it easier to analyze and search for a particular element among the collection of elements.
+ The categories of sorting are:
+
+Internal sorting
+External sorting
+In internal sorting, the data to be sorted is present in the main memory or RAM, and sorting  process will also occur in the main memory itself. Examples of internal sorting are bubble sort, insertion sort, selection sort.   
+
+While in the case of external sorting, the data is not always present in the RAM because the data is large. So data is filled in the RAM or main memory in small portions. An example of external sorting is the Merge sort.
+Types of Sorting Techniques
+There are various types of sorting techniques in C++. We will be learning the most popular ones in this article.
+
+Bubble sort
+Selection sort
+Insertion sort
+Quick sort
