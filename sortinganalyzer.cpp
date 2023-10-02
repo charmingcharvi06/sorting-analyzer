@@ -1,102 +1,124 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <chrono>
-#include <random>
+// C++ program for visualization of bubble sort
 
-// Function to generate a random vector of integers
-std::vector<int> generateRandomVector(int size) {
-    std::vector<int> vec;
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(1, 1000);
+#include "graphics.h"
+#include <bits/stdc++.h>
 
-    for (int i = 0; i < size; i++) {
-        vec.push_back(dist(gen));
-    }
+using namespace std;
 
-    return vec;
+// Initialize the size
+// with the total numbers to sorted
+// and the gap to be maintained in graph
+vector<int> numbers;
+int size = 200;
+int gap = 4;
+
+// Function for swapping the lines graphically
+void swap(int i, int j, int x, int y)
+{
+	// Swapping the first line with the correct line
+	// by making it black again and then draw the pixel
+	// for white color.
+
+	setcolor(GREEN);
+	line(i, size, i, size - x);
+	setcolor(BLACK);
+	line(i, size, i, size - x);
+	setcolor(WHITE);
+	line(i, size, i, size - y);
+
+	// Swapping the first line with the correct line
+	// by making it black again and then draw the pixel
+	// for white color.
+	setcolor(GREEN);
+	line(j, size, j, size - y);
+	setcolor(BLACK);
+	line(j, size, j, size - y);
+	setcolor(WHITE);
+	line(j, size, j, size - x);
 }
 
-// Bubble Sort
-void bubbleSort(std::vector<int>& arr) {
-    int n = arr.size();
-    bool swapped;
+// Bubble sort function
+void bubbleSort()
+{
+	int temp, i, j;
 
-    do {
-        swapped = false;
-        for (int i = 0; i < n - 1; i++) {
-            if (arr[i] > arr[i + 1]) {
-                std::swap(arr[i], arr[i + 1]);
-                swapped = true;
-            }
-        }
-    } while (swapped);
+	for (i = 1; i < size; i++) {
+		for (j = 0; j < size - i; j++) {
+			if (numbers[j] > numbers[j + 1]) {
+				temp = numbers[j];
+				numbers[j] = numbers[j + 1];
+				numbers[j + 1] = temp;
+
+				// As we swapped the last two numbers
+				// just swap the lines with the values.
+				// This is function call
+				// for swapping the lines
+				swap(gap * j + 1,
+					gap * (j + 1) + 1,
+					numbers[j + 1],
+					numbers[j]);
+			}
+		}
+	}
 }
 
-// Insertion Sort
-void insertionSort(std::vector<int>& arr) {
-    int n = arr.size();
+// Driver program
+int main()
+{
 
-    for (int i = 1; i < n; i++) {
-        int key = arr[i];
-        int j = i - 1;
+	// auto detection of screen size
+	int gd = DETECT, gm;
+	int wid1;
 
-        while (j >= 0 && arr[j] > key) {
-            arr[j + 1] = arr[j];
-            j--;
-        }
+	// Graph initialization
+	initgraph(&gd, &gm, NULL);
 
-        arr[j + 1] = key;
-    }
-}
+	// setting up window size (gap*size) * (size)
+	wid1 = initwindow(gap * size + 1, size + 1);
+	setcurrentwindow(wid1);
 
-// Selection Sort
-void selectionSort(std::vector<int>& arr) {
-    int n = arr.size();
+	// Initializing the array
+	for (int i = 1; i <= size; i++)
+		numbers.push_back(i);
 
-    for (int i = 0; i < n - 1; i++) {
-        int minIndex = i;
-        for (int j = i + 1; j < n; j++) {
-            if (arr[j] < arr[minIndex]) {
-                minIndex = j;
-            }
-        }
+	// Find a seed and shuffle the array
+	// to make it random.
+	// Here different type of array
+	// can be taken to results
+	// such as nearly sorted, already sorted,
+	// reverse sorted to visualize the result
+	unsigned seed
+		= chrono::system_clock::now()
+			.time_since_epoch()
+			.count();
 
-        std::swap(arr[i], arr[minIndex]);
-    }
-}
+	shuffle(numbers.begin(),
+			numbers.end(),
+			default_random_engine(seed));
 
-int main() {
-    int size = 10000;
-    std::vector<int> data = generateRandomVector(size);
+	// Initial plot of numbers in graph taking
+	// the vector position as x-axis and its
+	// corresponding value will be the height of line.
+	for (int i = 1; i <= gap * size; i += gap) {
+		line(i, size, i, (size - numbers[i / gap]));
+	}
 
-    // Measure the time for Bubble Sort
-    auto start = std::chrono::high_resolution_clock::now();
-    bubbleSort(data);
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> duration = end - start;
-    std::cout << "Bubble Sort Time: " << duration.count() << " seconds" << std::endl;
+	// Delay the code
+	delay(200);
 
-    // Reset the data
-    data = generateRandomVector(size);
+	// Call sort
+	bubbleSort();
 
-    // Measure the time for Insertion Sort
-    start = std::chrono::high_resolution_clock::now();
-    insertionSort(data);
-    end = std::chrono::high_resolution_clock::now();
-    duration = end - start;
-    std::cout << "Insertion Sort Time: " << duration.count() << " seconds" << std::endl;
+	for (int i = 0; i < size; i++) {
+		cout << numbers[i] << " ";
+	}
+	cout << endl;
 
-    // Reset the data
-    data = generateRandomVector(size);
+	// Wait for sometime .
+	delay(5000);
 
-    // Measure the time for Selection Sort
-    start = std::chrono::high_resolution_clock::now();
-    selectionSort(data);
-    end = std::chrono::high_resolution_clock::now();
-    duration = end - start;
-    std::cout << "Selection Sort Time: " << duration.count() << " seconds" << std::endl;
+	// Close the graph
+	closegraph();
 
-    return 0;
+	return 0;
 }
